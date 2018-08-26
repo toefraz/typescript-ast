@@ -44,6 +44,7 @@ function createResponseInterface() {
     members.push(
         ts.createPropertySignature(undefined, 'next', undefined, ts.createTypeLiteralNode(members2), undefined)
     );
+
     const responseInterface = ts.createInterfaceDeclaration(
         undefined,
         undefined,
@@ -59,18 +60,15 @@ function createResponseInterface() {
 }
 
 function main(): string {
-    const resultFile = ts.createSourceFile(
-        'someFileName.ts',
-        '',
-        ts.ScriptTarget.Latest,
-        /*setParentNodes*/ false,
-        ts.ScriptKind.TS
-    );
+    const nodes = [createResponseInterface(), createResponseInterface()];
+
     const printer = ts.createPrinter({
         newLine: ts.NewLineKind.LineFeed
     });
-    const result = printer.printNode(ts.EmitHint.Unspecified, createResponseInterface(), resultFile);
-    return result;
+
+    const result = nodes.map((node) => printer.printNode(ts.EmitHint.Unspecified, node, undefined));
+
+    return result.join('\n\n');
 }
 
 console.log(main());
